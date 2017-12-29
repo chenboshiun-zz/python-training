@@ -1,8 +1,7 @@
 info = {
         # key    account | pwd | lock | cache | create |
         'user1' : ['jack','1212','E','','C'],
-        'user2' : ['jack','1212','E','','C'],
-        'user3' : ['jack','1212','E','','C'],
+        'user2' : ['wayne','1212','E','','C'],
 }
 import getpass
 inputcount = 0

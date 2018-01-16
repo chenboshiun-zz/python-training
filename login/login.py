@@ -1,49 +1,43 @@
 info = {
-        # key    account | pwd | lock | cache | create |
-        'user1' : ['jack','1212','E','','C'],
-        'user2' : ['wayne','1212','E','','C'],
+        'jack':'1212',
+        'wayne':'3434'
 }
-import getpass
-inputcount = 0
+lock = {}
+cache = {}
+count = 0
 
-for i in info:
-    data = i
-
-while inputcount < 3:
+while count < 3:
     user = input('account:')
-    if user != info[data][0]:
+    if user not in info.keys():
         print('Can\'t find your account!!!')
-        continue 
-    elif user == info[data][0] and info[data][3] == 'Y' and info[data][4] == 'C':
-        print('login successfully!!!，Welcome to account sysyem')
-        with open('account.txt','w+') as f:
-            f.write(info[data][0])
-            f.write(',')
-            f.write(info[data][2])
-            f.write('\n')
+        continue
+    elif user in cache.keys() and 'C' in list(cache.values()):
+        print('Already login, welcome to account sysyem')
         break
-    elif user == info[data][0] and info[data][2] == 'D':
+    elif user in lock.keys() and 'L' in list(lock.values()):
         print('%s is locked!!, please contract Admin' % user)
-        break
-    pwd = getpass.getpass('password:')
-    if user == info[data][0] and pwd == info[data][1] and info[data][4] == 'C':
-        print('login successfully!!!，Welcome to account sysyem')
-        info[data][3] = 'Y'
-        choice = input('want to logout[Y/N]:')
-        if choice != 'n' and choice != 'N':
-            inputcount = 0
+        continue
+    pwd = input('password:')
+    if user in info.keys() and pwd in list(info.values()):
+        print('Login successfully!!!，welcome to account sysyem')
+        with open('account.txt','w+') as f:
+            cache.setdefault(user,'C')
+            f.write(user)
+        reLogin = input('Do you want to relogin[Y/N]:')
+        if reLogin != 'N' and reLogin != 'n':
+            count = 0
         else:
             print('Welcome to account sysyem')
             break
     else:
-        print('password error, please re-type your password')
-    inputcount += 1
-    if user == info[data][0] and inputcount == 3: 
-        print('Error 3, lock user!!!')
-        info[data][2] = 'D'
-        reLogin = input('Want to reloagin[Y/N]:')
+        print('Password error, please re-type your password')
+    count += 1
+    if user in info.keys() and count == 3:
+        print('Auth Error 3, lock %s!!!, Please contact admin' % user)
+        lock.setdefault(user,'L')
+        reLogin = input('Do you want to relogin[Y/N]:')
         if reLogin != 'N' and reLogin != 'n':
-            inputcount = 0
+            count = 0
         else:
             print('Welcome back again')
             break
